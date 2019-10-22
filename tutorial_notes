@@ -1,0 +1,60 @@
+Blockchain
+https://medium.com/@vanflymen/learn-blockchains-by-building-one-117428612f46
+
+O que é?
+Immutable, sequential chain of records called Blocks
+Blocks can contain any data you like
+Chained together using hashes
+
+	O que são hash functions?
+		https://learncryptography.com/hash-functions/what-are-hash-functions
+		Simplismente uma função que recebe um input e cria um valor de saída determinístico do valor de entrada
+		f(x) = y
+		md5('Oi PROCERGS') = 5eb63bbe01pipitchu93cb2b8f5acdc3
+		md5 function pega qualquer dado de entrada e transforma em 32 char hex output
+		Hash funcs normally are irreversible (one-way): can't figure the input having only the output unless bruteforce (trying all the possible inputs)
+		Usually used to prove that something is equals to something else, without revealing the information beforehand.
+Instalei Flask e requests
+
+Blockchain:
+	Guarda lista de transações
+
+Block:
+	Index
+	Timestamp (em Unix time)
+	Lista de transações
+	Proof
+	Hash do block anterior
+
+Noção de corrente deve ficar aparente aqui:
+	Cada bloco novo vai ter o hash do bloco anterior
+	Isso é crucial, pois confere imutabilidade à blockchain
+	Se tu mudar algum bloco anterior, todos os proximos hashes estarão  errados
+
+Adicionar nova transação:
+	Cria um objeto de transação novo - nesse caso com sender, receiver e amount
+	Insere o objeto no fim da lista de transações
+	Retorna o índice do bloco em que a transação vai ser adicionada - o próximo a ser minerado
+	return self.last_block['index'] + 1
+
+Criando um blocos novos:
+	Quando instanciarmos o nosso blockchain, precisamos seed it com um genesis block (sem predecessores) Também precisamos adicionar uma proof ao nosso genesis block, que é o resultado da mineração (ou prova do trabalho)
+
+
+Understanding Proof of Work:
+	É como novos blocos são criados ou minerados na blockchain
+	O objetivo do PoW é descobrir um número que resolve um problema.
+	O número deve ser difícil de achar e fácil de verificar - computacionalmente falando - por qualquer pessoa na rede.
+	e.g.: 	hash da multiplicação de dois números tem que terminar com 0
+		Vamos fix o 5
+		hash(5*21) = 1253e9373e781b7500266caa55150e08e210bc8cd8cc70d89985e3600155e860
+		Solução é 21
+
+	O Proof of Work do bitcoin é o hashcash.
+	A solução do algoritmo gera um bloco novo.
+	Em geral, a dificuldade é determinada pelo número de caractéres procurados em um string.
+	A rede consegue FACILMENTE verificar a solução deles.
+
+Implementando um Proof of Work básico:
+	Encontre um número p que quando for hashed com a solução do bloco anterior um hash com 4 zeros à esquerda é gerado.
+	Pra ajustar a dificuldade do algoritmo, pode modificar a quantidade de zeros à esquerda. Adição de mais um zero, faz um diferença estupenda no tempo necessário para encontrar uma solução
